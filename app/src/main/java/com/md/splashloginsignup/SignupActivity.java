@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
+
 
 import com.md.splashloginsignup.databinding.ActivitySignupBinding;
 import com.mikepenz.iconics.context.IconicsLayoutInflater2;
@@ -20,6 +22,7 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_signup);
     }
+
 
 
     public void login(View view) {
