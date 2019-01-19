@@ -63,6 +63,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
+        facebookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getBaseContext(), "Sorry", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 
@@ -94,28 +101,33 @@ public class LoginActivity extends AppCompatActivity {
 
     private void signIn(final String email, final String password) {
 
-        // [START sign_in_with_email]
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        if(email.length() == 0 || password.length() == 0){
+            Toast.makeText(getBaseContext(), "Please enter credentials", Toast.LENGTH_LONG).show();
+        } else {
+            // [START sign_in_with_email]
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(getBaseContext(), "Logged in", Toast.LENGTH_LONG);
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "signInWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                Toast.makeText(getBaseContext(), "Logged in", Toast.LENGTH_LONG).show();
 
-                        } else {
-                            // If sign in fails, display a message to the user.
+                            } else {
+                                // If sign in fails, display a message to the user.
 //                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Log.w(TAG, email + " " + password);
-                            Toast.makeText(getBaseContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                                Log.w(TAG, email + " " + password);
+                                Toast.makeText(getBaseContext(), "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                            // [END_EXCLUDE]
                         }
-                        // [END_EXCLUDE]
-                    }
-                });
-        // [END sign_in_with_email]
+                    });
+            // [END sign_in_with_email]
+        }
+
     }
 
 
