@@ -26,8 +26,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.md.splashloginsignup.databinding.ActivityLoginBinding;
 import com.mikepenz.iconics.context.IconicsLayoutInflater2;
 
-import java.util.Arrays;
-import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
