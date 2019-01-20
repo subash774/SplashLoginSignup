@@ -2,6 +2,7 @@ package com.md.splashloginsignup;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -13,21 +14,27 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-
+import com.google.firebase.database.DatabaseReference;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.md.splashloginsignup.databinding.ActivitySignupBinding;
 import com.mikepenz.iconics.context.IconicsLayoutInflater2;
+
+import java.util.ArrayList;
+
 
 public class SignupActivity extends AppCompatActivity {
     ActivitySignupBinding binding;
 
-    EditText emailAddress, initialPassword, confirmedPassword;
+    EditText fullName, emailAddress, initialPassword, confirmedPassword;
     Button signupButton;
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
+
     private static final String TAG = "EmailPassword";
 
 
@@ -48,6 +55,7 @@ public class SignupActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_signup);
 
         signupButton = (Button) findViewById(R.id.btn_signup);
+        fullName = (EditText) findViewById(R.id.et_full_name);
         emailAddress = (EditText) findViewById(R.id.et_email_address);
         initialPassword = (EditText) findViewById(R.id.et_password);
         confirmedPassword = (EditText) findViewById(R.id.et_confirm_password);
@@ -57,6 +65,9 @@ public class SignupActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
+
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +86,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
 
-    private void createAccount(String email, String password) {
+    private void createAccount(final String email, final String password) {
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -85,8 +96,14 @@ public class SignupActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            // Send verification link
                             sendEmailVerification();
-                            // TODO: Send user to the notes page
+
+                            // Add notes into to firebase
+                            User newUser = new User(user.getUid(), fullName.getText().toString(), email, null);
+                            writeNewUser(newUser);
+                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -129,8 +146,21 @@ public class SignupActivity extends AppCompatActivity {
     }
 
 
+    // [START basic_write]
+    private void writeNewUser(User user) {
+        mDatabase.child("users").child(user.getUserId()).setValue(user);
+    }
+    // [END basic_write]
+
+
     public void login(View view) {
         startActivity(new Intent(this, LoginActivity.class));
+    }
+
+
+    @Override
+    public void onBackPressed(){
+        finish();
     }
 
     @Override

@@ -5,11 +5,20 @@ import java.util.ArrayList;
 
 public class User {
 
+    private String userId;
     private String fullName;
     private String email;
-    private String password;
     private ArrayList<Notes> notes;
-    
+
+
+    public User(String userId, String fullName, String email, ArrayList<Notes> notes) {
+        this.userId = userId;
+        this.fullName = fullName;
+        this.email = email;
+        this.notes = notes;
+    }
+
+
     public String getFullName() {
         return fullName;
     }
@@ -26,14 +35,6 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public ArrayList<Notes> getNotes() {
         return notes;
     }
@@ -42,6 +43,12 @@ public class User {
         this.notes = notes;
     }
 
+    public String getUserId() {
+        return userId;
+    }
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
 }
