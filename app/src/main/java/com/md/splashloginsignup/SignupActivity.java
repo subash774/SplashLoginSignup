@@ -46,7 +46,10 @@ public class SignupActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        //TODO: Send user to the notes page;
+        if(currentUser.getEmail() != null && currentUser.isEmailVerified()) {
+            finish();
+            startActivity(new Intent(this, NotesActivity.class));
+        }
     }
 
     @Override

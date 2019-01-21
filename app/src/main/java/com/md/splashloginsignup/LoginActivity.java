@@ -84,7 +84,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        //TODO: Send user to the notes page;
+        if(currentUser.getEmail() != null && currentUser.isEmailVerified()) {
+            finish();
+            startActivity(new Intent(this, NotesActivity.class));
+        }
     }
 
 
@@ -125,6 +128,8 @@ public class LoginActivity extends AppCompatActivity {
 
                                 if(currentUserVerified){
                                     Toast.makeText(getBaseContext(), "Logged in", Toast.LENGTH_LONG).show();
+                                    finish();
+                                    startActivity(new Intent(getBaseContext(), NotesActivity.class));
                                 } else {
                                     createMessage("Verification Needed", "Please verify your email address before continuing.");
                                     passwordFromForm.setText("");
