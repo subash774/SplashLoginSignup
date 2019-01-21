@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,7 +30,9 @@ public class SignupActivity extends AppCompatActivity {
     ActivitySignupBinding binding;
 
     EditText fullName, emailAddress, initialPassword, confirmedPassword;
-    Button signupButton;
+    Button signupButton, facebookButton;
+    ImageButton backButton;
+
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
@@ -53,6 +56,9 @@ public class SignupActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_signup);
 
         signupButton = (Button) findViewById(R.id.btn_signup);
+        facebookButton = (Button) findViewById(R.id.btn_signup_fb);
+        backButton = (ImageButton) findViewById(R.id.btn_back);
+
         fullName = (EditText) findViewById(R.id.et_full_name);
         emailAddress = (EditText) findViewById(R.id.et_email_address);
         initialPassword = (EditText) findViewById(R.id.et_password);
@@ -78,6 +84,20 @@ public class SignupActivity extends AppCompatActivity {
                 } else {
                     createAccount(emailAddress.getText().toString(), confirmedPassword.getText().toString());
                 }
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        facebookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createMessage("Work In Progress", "Sorry, this feature is not yet available. \nPlease sign up using email and password.");
             }
         });
 
@@ -147,6 +167,7 @@ public class SignupActivity extends AppCompatActivity {
 
 
     public void login(View view) {
+        finish();
         startActivity(new Intent(this, LoginActivity.class));
     }
 

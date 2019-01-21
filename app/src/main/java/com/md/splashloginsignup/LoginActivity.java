@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,8 +27,8 @@ import com.mikepenz.iconics.context.IconicsLayoutInflater2;
 
 public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
-    Button loginButton;
-    Button facebookButton;
+    Button loginButton, facebookButton;
+    ImageButton backButton;
     EditText emailAddress, passwordFromForm;
     private FirebaseAuth mAuth;
     private static final String TAG = "EmailPassword";
@@ -41,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton = (Button) findViewById(R.id.btn_login);
         facebookButton = (Button) findViewById(R.id.btn_login_fb);
+        backButton = (ImageButton) findViewById(R.id.btn_back);
 
         emailAddress = (EditText) findViewById(R.id.et_email_address);
         passwordFromForm = (EditText) findViewById(R.id.et_password);
@@ -65,6 +67,14 @@ public class LoginActivity extends AppCompatActivity {
                 createMessage("Sorry", "This feature is not yet available. \nPlease sign in using email and password");
             }
         });
+
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
 
@@ -79,6 +89,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     public void signup(View view) {
+        finish();
         startActivity(new Intent(this, SignupActivity.class));
     }
 
