@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     Button loginButton, facebookButton;
     ImageButton backButton;
     EditText emailAddress, passwordFromForm;
+    TextView forgotPassword;
     private FirebaseAuth mAuth;
     private static final String TAG = "EmailPassword";
 
@@ -46,6 +48,9 @@ public class LoginActivity extends AppCompatActivity {
 
         emailAddress = (EditText) findViewById(R.id.et_email_address);
         passwordFromForm = (EditText) findViewById(R.id.et_password);
+
+
+        forgotPassword = (TextView) findViewById(R.id.forgot_password);
 
         // [START initialize_auth]
         // Initialize Firebase Auth
@@ -69,6 +74,18 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = emailAddress.getText().toString();
+                if(email.length() < 3){
+                    createMessage("Reset Password","Please enter the email address to reset your password. \nYou can leave the password field blank.");
+                } else {
+                    sendPasswordRestEmail(email);
+                }
+            }
+        });
+
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +108,17 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    public void sendPasswordRestEmail(String email){
+        mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    createMessage("Password Reset", "Password reset link has been sent your email, please follow the instructions.");
+                }
+            }
+        });
     }
 
 

@@ -31,7 +31,7 @@
 
 
     <!--Misc texts-->
-    <string name="forgot_password">Forgot password?</string>
+    <string name="forgot_password">Reset my password</string>
     <string name="no_account">Don\’t have an account?</string>
     <string name="have_account">Have an account?</string>
     <string name="divider_or">OR</string>
