@@ -1,30 +1,28 @@
 package com.md.splashloginsignup;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.provider.ContactsContract;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.LayoutInflaterCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.google.firebase.database.DatabaseReference;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.md.splashloginsignup.databinding.ActivitySignupBinding;
 import com.mikepenz.iconics.context.IconicsLayoutInflater2;
-
-import java.util.ArrayList;
 
 
 public class SignupActivity extends AppCompatActivity {
@@ -74,9 +72,9 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(!initialPassword.getText().toString().equals(confirmedPassword.getText().toString())){
                     Log.w(TAG,initialPassword + "     " + confirmedPassword);
-                    Toast.makeText(getBaseContext(), "Passwords don't match", Toast.LENGTH_LONG).show();
+                    createMessage("Error", "Please make sure both passwords entered are the same.");
                 } else if (emailAddress.getText().toString().length() < 3 || initialPassword.getText().toString().length() < 6 || confirmedPassword.getText().toString().length() < 6) {
-                    Toast.makeText(getBaseContext(), "Enter all credentials", Toast.LENGTH_LONG).show();
+                    createMessage("Incomplete", "Please make sure you've filled in all the fields.");
                 } else {
                     createAccount(emailAddress.getText().toString(), confirmedPassword.getText().toString());
                 }
@@ -107,8 +105,7 @@ public class SignupActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(getBaseContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            createMessage("Authentication Failed","Either email or password incorrect.");
 
                         }
                     }
@@ -130,14 +127,10 @@ public class SignupActivity extends AppCompatActivity {
                         // [START_EXCLUDE]
                         // Re-enable button
                         if (task.isSuccessful()) {
-                            Toast.makeText(getBaseContext(),
-                                    "Verification email sent to " + user.getEmail(),
-                                    Toast.LENGTH_SHORT).show();
+                            createMessage("Verify Email", "Account has been successfully created. \nPLease now follow instructions sent to your email.");
                         } else {
                             Log.e(TAG, "sendEmailVerification", task.getException());
-                            Toast.makeText(getBaseContext(),
-                                    "Failed to send verification email.",
-                                    Toast.LENGTH_SHORT).show();
+                            createMessage("Error", "Ooops, unexpected error occurred. Please make sure the email address is valid!");
                         }
                         // [END_EXCLUDE]
                     }
@@ -155,6 +148,22 @@ public class SignupActivity extends AppCompatActivity {
 
     public void login(View view) {
         startActivity(new Intent(this, LoginActivity.class));
+    }
+
+    public void createMessage(String title, String message){
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+        dlgAlert.setMessage(message);
+        dlgAlert.setTitle(title);
+        dlgAlert.setPositiveButton("OK", null);
+        dlgAlert.setCancelable(true);
+        dlgAlert.create().show();
+
+        dlgAlert.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //dismiss the dialog
+                    }
+                });
     }
 
 

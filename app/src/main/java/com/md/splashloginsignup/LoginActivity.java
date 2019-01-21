@@ -3,22 +3,18 @@ package com.md.splashloginsignup;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.firebase.ui.auth.AuthUI;
-
-import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -66,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         facebookButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getBaseContext(), "Sorry", Toast.LENGTH_LONG).show();
+                createMessage("Sorry", "This feature is not yet available. \nPlease sign in using email and password");
             }
         });
     }
@@ -101,7 +97,8 @@ public class LoginActivity extends AppCompatActivity {
     private void signIn(final String email, final String password) {
 
         if(email.length() == 0 || password.length() == 0){
-            Toast.makeText(getBaseContext(), "Please enter credentials", Toast.LENGTH_LONG).show();
+            createMessage("Authentication Failed", "Email or password entered is incorrect.");
+            passwordFromForm.setText("");
         } else {
             // [START sign_in_with_email]
             mAuth.signInWithEmailAndPassword(email, password)
@@ -118,15 +115,16 @@ public class LoginActivity extends AppCompatActivity {
                                 if(currentUserVerified){
                                     Toast.makeText(getBaseContext(), "Logged in", Toast.LENGTH_LONG).show();
                                 } else {
-                                    Toast.makeText(getBaseContext(), "Please verify your email", Toast.LENGTH_LONG).show();
+                                    createMessage("Verification Needed", "Please verify your email address before continuing.");
+                                    passwordFromForm.setText("");
                                 }
 
                             } else {
                                 // If sign in fails, display a message to the user.
 //                            Log.w(TAG, "signInWithEmail:failure", task.getException());
                                 Log.w(TAG, email + " " + password);
-                                Toast.makeText(getBaseContext(), "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
+                                createMessage("Authentication Failed", "Email or password entered is incorrect.");
+                                passwordFromForm.setText("");
                             }
                             // [END_EXCLUDE]
                         }
@@ -136,6 +134,22 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+
+    public void createMessage(String title, String message){
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+        dlgAlert.setMessage(message);
+        dlgAlert.setTitle(title);
+        dlgAlert.setPositiveButton("OK", null);
+        dlgAlert.setCancelable(true);
+        dlgAlert.create().show();
+
+        dlgAlert.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //dismiss the dialog
+                    }
+                });
+    }
 
     @Override
     public void onBackPressed(){
